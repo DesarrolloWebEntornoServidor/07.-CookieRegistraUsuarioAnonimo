@@ -21,9 +21,18 @@ public class RegistraUsuarioAnonimo extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String mensaje = "";
+        String mensaje;
         // Recepción de cookies
-        Cookie[] listaCookies = request.getCookies();        
+        mensaje = recibeCookie(request, response);
+
+        //Salida
+        generarPagina(out, mensaje);
+    }
+
+	private String recibeCookie(HttpServletRequest request,
+			HttpServletResponse response) {
+		String mensaje = "";
+		Cookie[] listaCookies = request.getCookies();        
         // se comprueba si el usuario tiene una cookie uid
 
         if (listaCookies != null) {  // se han recibido Cookies desde el cliente
@@ -48,9 +57,11 @@ public class RegistraUsuarioAnonimo extends HttpServlet {
             Cookie laCookie = new Cookie("uid", Integer.toString(aleatorio));
         	response.addCookie(laCookie);  //Añadir las cookies a la respuesta
         }
+		return mensaje;
+	}
 
-        //Salida
-        out.println("<html>");
+	private void generarPagina(PrintWriter out, String mensaje) {
+		out.println("<html>");
         out.println("<head>");
         out.println("	<meta charset=\"utf-8\" />");
         out.println("	<title>Registra Usuario Anónimo</title>");            
@@ -60,7 +71,7 @@ public class RegistraUsuarioAnonimo extends HttpServlet {
         out.println(mensaje);            
         out.println("</body>");
         out.println("</html>");
-    }
+	}
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
